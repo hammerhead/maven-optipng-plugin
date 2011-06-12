@@ -59,6 +59,11 @@ public class OptimizePngMojo extends AbstractMojo {
      * Executes the mojo.
      */
     public void execute() throws MojoExecutionException {
+        if (!verifyOptipngInstallation()) {
+            throw new MojoExecutionException("Could not find optipng on "
+                + "this system");
+        }
+
         for (final String directory : pngDirectories) {
             File d = new File(directory);
             if (!d.exists()) {
@@ -129,5 +134,24 @@ public class OptimizePngMojo extends AbstractMojo {
         args.add(OPTIPNG_EXE);
         args.add(image.getPath());
         return new ProcessBuilder(args).start();
+    }
+
+    private static boolean verifyOptipngInstallation() throws MojoExecutionException {
+        List<String> args = new LinkedList<String>();
+        args.add(OPTIPNG_EXE);
+
+        Process p;
+        try {
+            p = new ProcessBuilder(args).start();
+            p.waitFor();
+        } catch (IOException e) {
+            throw new MojoExecutionException("Failed to verify optipng "
+                + "installation", e);
+        } catch (InterruptedException e) {
+            throw new MojoExecutionException("Failed to verify optipng "
+                + "installation", e);
+        }
+
+    	return p.exitValue() != 0;
     }
 }

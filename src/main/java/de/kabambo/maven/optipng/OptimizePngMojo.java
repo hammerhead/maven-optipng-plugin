@@ -137,15 +137,35 @@ public class OptimizePngMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * A task which optimizes a single image.
+     */
     private class OptimizeTask implements Runnable {
+        /**
+         * Image to optimize.
+         */
         private File image;
+
+        /**
+         * Reference to maven logger object for printing the result of the
+         * optimization.
+         */
         private Log log;
 
+        /**
+         * Creates a new optimization task.
+         *
+         * @param image image to optimize
+         * @param log logger to print optimization result to
+         */
         public OptimizeTask(final File image, final Log log) {
             this.image = image;
             this.log = log;
         }
 
+        /**
+         * Runs the actual optimization.
+         */
         @Override
         public void run() {
             Process p = null;
@@ -174,6 +194,11 @@ public class OptimizePngMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * Builds a optipng call and spawns a new process.
+     *
+     * @return spawned process
+     */
     private Process startProcess(final File image) throws IOException {
         List<String> args = new LinkedList<String>();
         args.add(OPTIPNG_EXE);
@@ -183,7 +208,13 @@ public class OptimizePngMojo extends AbstractMojo {
         return new ProcessBuilder(args).start();
     }
 
-    private static boolean verifyOptipngInstallation() throws MojoExecutionException {
+    /**
+     * Verifies whether optipng is installed.
+     *
+     * @return <code>true</code> if installed, <code>false</code> otherwise
+     */
+    private static boolean verifyOptipngInstallation() throws
+            MojoExecutionException {
         List<String> args = new LinkedList<String>();
         args.add(OPTIPNG_EXE);
 
@@ -202,6 +233,11 @@ public class OptimizePngMojo extends AbstractMojo {
         return p.exitValue() == 0;
     }
 
+    /**
+     * Verifies whether the provided level is within legal bounds.
+     *
+     * @return <code>true</code> if legal, <code>false</code> otherwise
+     */
     private boolean verifyLevel() {
         return level >= LEVEL_LOWER_BOUND && level <= LEVEL_UPPER_BOUND;
     }

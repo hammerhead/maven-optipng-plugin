@@ -16,6 +16,8 @@ import org.apache.maven.plugin.logging.Log;
 /**
  * Goal which optimizes PNG images.
  *
+ * @TODO recursion?
+ *
  * @goal optimize
  * @phase process-sources
  */
@@ -36,12 +38,29 @@ public class OptimizePngMojo extends AbstractMojo {
     private static final int POOL_TIMEOUT = 10;
 
     /**
+     * Lower bound for optimization level passed to optipng.
+     */
+    private static final int LEVEL_LOWER_BOUND = 0;
+
+    /**
+     * Upper bound for optimization level passed to optipng.
+     */
+    private static final int LEVEL_UPPER_BOUND = 7;
+
+    /**
      * List of directories to consider.
      *
      * @parameter
      * @required
      */
     private List<String> pngDirectories;
+
+    /**
+     * Specifies the intensity of compression.
+     *
+     * @parameter default-value=2
+     */
+    private int level;
 
     /**
      * Thread pool containing processes which optimize a single image.
@@ -58,10 +77,16 @@ public class OptimizePngMojo extends AbstractMojo {
     /**
      * Executes the mojo.
      */
+    @Override
     public void execute() throws MojoExecutionException {
         if (!verifyOptipngInstallation()) {
             throw new MojoExecutionException("Could not find optipng on "
                 + "this system");
+        }
+
+        if (!verifyLevel()) {
+            throw new MojoExecutionException("Invalid level. Must be >= "
+                + LEVEL_LOWER_BOUND + " and <= " + LEVEL_UPPER_BOUND);
         }
 
         for (final String directory : pngDirectories) {
@@ -77,6 +102,7 @@ public class OptimizePngMojo extends AbstractMojo {
             }
 
             File[] containedImages = d.listFiles(new FilenameFilter() {
+                @Override
                 public boolean accept(final File dir, final String name) {
                     return name.endsWith(PNG_SUFFIX);
                 }
@@ -96,7 +122,7 @@ public class OptimizePngMojo extends AbstractMojo {
         }
     }
 
-    private static class OptimizeTask implements Runnable {
+    private class OptimizeTask implements Runnable {
         private File image;
         private Log log;
 
@@ -105,6 +131,7 @@ public class OptimizePngMojo extends AbstractMojo {
             this.log = log;
         }
 
+        @Override
         public void run() {
             Process p = null;
 
@@ -123,15 +150,20 @@ public class OptimizePngMojo extends AbstractMojo {
                 return;
             }
 
-            long sizeOptimized = image.length();
-            log.info("Optimized " + image.getPath() + " by "
-                + (sizeUnoptimized - sizeOptimized) + " bytes");
+            float kbOptimized = (sizeUnoptimized - (long) image.length()) / 1024f;
+            float percentageOptimized = kbOptimized / (sizeUnoptimized / 1024f) * 100;
+
+            log.info(String.format("Optimized %s by %.2f kb (%.2f%%)",
+                image.getPath(), kbOptimized, percentageOptimized));
+
         }
     }
 
-    private static Process startProcess(final File image) throws IOException {
+    private Process startProcess(final File image) throws IOException {
         List<String> args = new LinkedList<String>();
         args.add(OPTIPNG_EXE);
+        args.add("-o");
+        args.add(String.valueOf(level));
         args.add(image.getPath());
         return new ProcessBuilder(args).start();
     }
@@ -152,6 +184,11 @@ public class OptimizePngMojo extends AbstractMojo {
                 + "installation", e);
         }
 
-    	return p.exitValue() != 0;
+        return p.exitValue() == 0;
+    }
+
+    private boolean verifyLevel() {
+        return level >= LEVEL_LOWER_BOUND && level <= LEVEL_UPPER_BOUND;
     }
 }
+

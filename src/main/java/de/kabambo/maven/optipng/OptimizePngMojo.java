@@ -104,6 +104,7 @@ public class OptimizePngMojo extends AbstractMojo {
                 + LEVEL_LOWER_BOUND + " and <= " + LEVEL_UPPER_BOUND);
         }
 
+        int numberImages = 0;
         for (final String directory : pngDirectories) {
             File d = new File(directory);
             if (!d.exists()) {
@@ -123,6 +124,7 @@ public class OptimizePngMojo extends AbstractMojo {
                 }
             });
 
+            numberImages += containedImages.length;
             for (File image : containedImages) {
                 pool.submit(new OptimizeTask(image, getLog()));
             }
@@ -130,7 +132,8 @@ public class OptimizePngMojo extends AbstractMojo {
 
         pool.shutdown();
         try {
-            pool.awaitTermination(POOL_TIMEOUT, TimeUnit.SECONDS);
+            pool.awaitTermination(calculateTimeout(numberImages), TimeUnit.
+                SECONDS);
         } catch (InterruptedException e) {
             throw new MojoExecutionException("Waiting for process termination "
                 + "was interrupted.", e);
@@ -206,6 +209,16 @@ public class OptimizePngMojo extends AbstractMojo {
         args.add(String.valueOf(level));
         args.add(image.getPath());
         return new ProcessBuilder(args).start();
+    }
+
+    /**
+     * Calculate a proper timeout threshold given the number of images to
+     * compress and the compression level.
+     *
+     * @param numberImages number of images to compress
+     */
+    private int calculateTimeout(int numberImages) {
+        return numberImages * POOL_TIMEOUT + numberImages * level * 5;
     }
 
     /**

@@ -1,0 +1,20 @@
+Usage
+-----
+	<plugin>
+		<groupId>de.kabambo</groupId>
+		<artifactId>maven-optipng-plugin</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<executions>
+			<execution>
+				<goals>
+					<goal>optimize</goal>
+				</goals>
+			</execution>
+		</executions>
+		<configuration>
+			<pngDirectories>
+				<pngDirectory>${basedir}src/main/webapp/png</pngDirectory>
+			</pngDirectories>
+		</configuration>
+	</plugin>
+

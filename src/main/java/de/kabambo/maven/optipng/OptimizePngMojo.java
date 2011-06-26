@@ -31,10 +31,8 @@ import org.apache.maven.plugin.logging.Log;
 /**
  * Goal which optimizes PNG images.
  *
- * @TODO recursion?
- *
  * @goal optimize
- * @phase process-sources
+ * @phase compile
  */
 public class OptimizePngMojo extends AbstractMojo {
     /**
@@ -91,6 +89,8 @@ public class OptimizePngMojo extends AbstractMojo {
 
     /**
      * Executes the mojo.
+     *
+     * @throws MojoExecutionException if execution failed
      */
     @Override
     public void execute() throws MojoExecutionException {
@@ -188,8 +188,10 @@ public class OptimizePngMojo extends AbstractMojo {
                 return;
             }
 
-            float kbOptimized = (sizeUnoptimized - (long) image.length()) / 1024f;
-            float percentageOptimized = kbOptimized / (sizeUnoptimized / 1024f) * 100;
+            float kbOptimized = (sizeUnoptimized - (long) image.length())
+                / 1024f;
+            float percentageOptimized = kbOptimized / (sizeUnoptimized / 1024f)
+                * 100;
 
             log.info(String.format("Optimized %s by %.2f kb (%.2f%%)",
                 image.getPath(), kbOptimized, percentageOptimized));
@@ -200,7 +202,9 @@ public class OptimizePngMojo extends AbstractMojo {
     /**
      * Builds a optipng call and spawns a new process.
      *
+     * @param image image to optimize
      * @return spawned process
+     * @throws IOException in case building the process failed
      */
     private Process startProcess(final File image) throws IOException {
         List<String> args = new LinkedList<String>();
@@ -216,6 +220,7 @@ public class OptimizePngMojo extends AbstractMojo {
      * compress and the compression level.
      *
      * @param numberImages number of images to compress
+     * @return timeout in seconds
      */
     private int calculateTimeout(int numberImages) {
         return numberImages * POOL_TIMEOUT + numberImages * level * 5;
@@ -225,6 +230,7 @@ public class OptimizePngMojo extends AbstractMojo {
      * Verifies whether optipng is installed.
      *
      * @return <code>true</code> if installed, <code>false</code> otherwise
+     * @throws MojoExecutionException in case building the process failed
      */
     private static boolean verifyOptipngInstallation() throws
             MojoExecutionException {
@@ -255,4 +261,3 @@ public class OptimizePngMojo extends AbstractMojo {
         return level >= LEVEL_LOWER_BOUND && level <= LEVEL_UPPER_BOUND;
     }
 }
-

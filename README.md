@@ -6,7 +6,7 @@ For sufficient performance of your build process, this plugin processes images i
 
 Requirements
 ------------
-It is assumed that you have `optipng` installed on your system and that the executeble is available with your `$PATH`.
+It is assumed that you have `optipng` installed on your system and that the executable is available with your `$PATH`.
 
 This plugin has only been tested on Linux.
 

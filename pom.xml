@@ -26,6 +26,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compileSource>1.6</compileSource>
+		<compileTarget>1.6</compileTarget>
 	</properties>
 
     <build>
@@ -35,7 +36,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>${compileSource}</source>
-                    <target>${compileSource}</target>
+                    <target>${compileTarget}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>

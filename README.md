@@ -1,11 +1,13 @@
 Introduction
 ------------
 This maven plugin invokes [OptiPNG](http://optipng.sourceforge.net/ "OptiPNG Homepage") on a set of images. OptiPNG is a PNG optimizer which reduces the file size of images by running a lossless recompression.
+
 For sufficient performance of your build process, this plugin processes images in parallel.
 
 Requirements
 ------------
 It is assumed that you have `optipng` installed on your system and that the executeble is available with your `$PATH`.
+
 This plugin has only been tested on Linux.
 
 Usage

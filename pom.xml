@@ -23,6 +23,41 @@
 
     <name>maven-optipng-plugin Maven Plugin</name>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/hammerhead/maven-optipng-plugin</url>
+        <connection>scm:git:git@github.com:hammerhead/maven-optipng-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:hammerhead/maven-optipng-plugin.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issue Tracking</system>
+        <url>https://github.com/hammerhead/maven-optipng-plugin/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <id>hammerhead</id>
+            <name>Niklas Schmidtmer</name>
+            <roles>
+                <role>Owner</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <prerequisites>
+        <maven>2.2</maven>
+    </prerequisites>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <compileSource>1.6</compileSource>

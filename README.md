@@ -13,7 +13,7 @@ Usage
 		</executions>
 		<configuration>
 			<pngDirectories>
-				<pngDirectory>${basedir}src/main/webapp/png</pngDirectory>
+				<pngDirectory>${basedir}/src/main/webapp/png</pngDirectory>
 			</pngDirectories>
 		</configuration>
 	</plugin>

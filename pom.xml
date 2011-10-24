@@ -90,6 +90,8 @@
                     <source>${compileSource}</source>
                     <target>${compileTarget}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
         </plugins>

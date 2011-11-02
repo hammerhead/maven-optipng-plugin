@@ -14,6 +14,7 @@ Usage
 -----
 The following snippet demonstates a sample usage of this plugin.
 
+```xml
 	<plugin>
 		<groupId>de.kabambo</groupId>
 		<artifactId>maven-optipng-plugin</artifactId>
@@ -33,4 +34,4 @@ The following snippet demonstates a sample usage of this plugin.
 			</pngDirectories>
 		</configuration>
 	</plugin>
-
+```

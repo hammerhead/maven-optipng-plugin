@@ -46,6 +46,11 @@ public class OptimizePngMojo extends AbstractMojo {
     private static final String OPTIPNG_EXE = "optipng";
 
     /**
+     * Optipng parameter specifying compression level.
+     */
+    private static final String OPTIPNG_COMPRESSION_LEVEL_PARAM = "-o";
+
+    /**
      * Timeout in seconds for processes to terminate.
      */
     private static final int POOL_TIMEOUT = 10;
@@ -195,7 +200,6 @@ public class OptimizePngMojo extends AbstractMojo {
 
             log.info(String.format("Optimized %s by %.2f kb (%.2f%%)",
                 image.getPath(), kbOptimized, percentageOptimized));
-
         }
     }
 
@@ -209,7 +213,7 @@ public class OptimizePngMojo extends AbstractMojo {
     private Process startProcess(final File image) throws IOException {
         List<String> args = new LinkedList<String>();
         args.add(OPTIPNG_EXE);
-        args.add("-o");
+        args.add(OPTIPNG_COMPRESSION_LEVEL_PARAM);
         args.add(String.valueOf(level));
         args.add(image.getPath());
         return new ProcessBuilder(args).start();
@@ -222,7 +226,7 @@ public class OptimizePngMojo extends AbstractMojo {
      * @param numberImages number of images to compress
      * @return timeout in seconds
      */
-    private int calculateTimeout(int numberImages) {
+    private int calculateTimeout(final int numberImages) {
         return numberImages * POOL_TIMEOUT + numberImages * level * 5;
     }
 
@@ -261,3 +265,4 @@ public class OptimizePngMojo extends AbstractMojo {
         return level >= LEVEL_LOWER_BOUND && level <= LEVEL_UPPER_BOUND;
     }
 }
+

@@ -61,7 +61,6 @@
     </prerequisites>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <compileSource>1.6</compileSource>
         <compileTarget>1.6</compileTarget>
     </properties>
@@ -89,7 +88,6 @@
                 <configuration>
                     <source>${compileSource}</source>
                     <target>${compileTarget}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                 </configuration>

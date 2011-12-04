@@ -93,6 +93,16 @@ public class OptimizePngMojo extends AbstractMojo {
     }
 
     /**
+     * A filename filter for PNG files.
+     */
+    private static class PngFilenameFilter implements FilenameFilter {
+        @Override
+        public boolean accept(final File dir, final String name) {
+            return name.endsWith(PNG_SUFFIX);
+        }
+    }
+
+    /**
      * Executes the mojo.
      *
      * @throws MojoExecutionException if execution failed
@@ -123,12 +133,7 @@ public class OptimizePngMojo extends AbstractMojo {
                     "The path %s is not a directory.", directory));
             }
 
-            File[] containedImages = d.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(final File dir, final String name) {
-                    return name.endsWith(PNG_SUFFIX);
-                }
-            });
+            File[] containedImages = d.listFiles(new PngFilenameFilter());
 
             numberImages += containedImages.length;
             for (File image : containedImages) {

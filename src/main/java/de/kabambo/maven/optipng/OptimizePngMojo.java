@@ -105,21 +105,22 @@ public class OptimizePngMojo extends AbstractMojo {
         }
 
         if (!verifyLevel()) {
-            throw new MojoExecutionException("Invalid level. Must be >= "
-                + LEVEL_LOWER_BOUND + " and <= " + LEVEL_UPPER_BOUND);
+            throw new MojoExecutionException(String.format(
+                "Invalid level. Must be >= %d and <= %d", LEVEL_LOWER_BOUND,
+                LEVEL_UPPER_BOUND));
         }
 
         int numberImages = 0;
         for (final String directory : pngDirectories) {
             File d = new File(directory);
             if (!d.exists()) {
-                throw new MojoExecutionException("Directory " + directory
-                    + " does not exist.");
+                throw new MojoExecutionException(String.format(
+                    "Directory %s does not exist.", directory));
             }
 
             if (!d.isDirectory()) {
-                throw new MojoExecutionException("The path " + directory
-                    + " is not a directory.");
+                throw new MojoExecutionException(String.format(
+                    "The path %s is not a directory.", directory));
             }
 
             File[] containedImages = d.listFiles(new FilenameFilter() {
@@ -140,8 +141,8 @@ public class OptimizePngMojo extends AbstractMojo {
             pool.awaitTermination(calculateTimeout(numberImages), TimeUnit.
                 SECONDS);
         } catch (InterruptedException e) {
-            throw new MojoExecutionException("Waiting for process termination "
-                + "was interrupted.", e);
+            throw new MojoExecutionException(
+                "Waiting for process termination was interrupted.", e);
         }
     }
 
@@ -246,11 +247,11 @@ public class OptimizePngMojo extends AbstractMojo {
             p = new ProcessBuilder(args).start();
             p.waitFor();
         } catch (IOException e) {
-            throw new MojoExecutionException("Failed to verify optipng "
-                + "installation", e);
+            throw new MojoExecutionException(
+                "Failed to verify optipng installation", e);
         } catch (InterruptedException e) {
-            throw new MojoExecutionException("Failed to verify optipng "
-                + "installation", e);
+            throw new MojoExecutionException(
+                "Failed to verify optipng installation", e);
         }
 
         return p.exitValue() == 0;

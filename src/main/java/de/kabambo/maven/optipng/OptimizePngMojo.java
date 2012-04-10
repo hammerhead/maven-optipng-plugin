@@ -217,7 +217,7 @@ public class OptimizePngMojo extends AbstractMojo {
      * @return spawned process
      * @throws IOException in case building the process failed
      */
-     private Process startProcess(final File image) throws IOException {
+    private Process startProcess(final File image) throws IOException {
         final StringBuilder args = new StringBuilder();
         args.append(OPTIPNG_COMPRESSION_LEVEL_PARAM).append(" ")
             .append(String.valueOf(level)).append(" ")

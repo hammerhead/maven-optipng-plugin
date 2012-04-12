@@ -137,6 +137,7 @@ public class OptimizePngMojo extends AbstractMojo {
 
             numberImages += containedImages.length;
             for (File image : containedImages) {
+                getLog().debug("Optimzing " + image);
                 pool.submit(new OptimizeTask(image, getLog()));
             }
         }
@@ -217,12 +218,11 @@ public class OptimizePngMojo extends AbstractMojo {
      * @throws IOException in case building the process failed
      */
     private Process startProcess(final File image) throws IOException {
-        List<String> args = new LinkedList<String>();
-        args.add(OPTIPNG_EXE);
-        args.add(OPTIPNG_COMPRESSION_LEVEL_PARAM);
-        args.add(String.valueOf(level));
-        args.add(image.getPath());
-        return new ProcessBuilder(args).start();
+        final StringBuilder args = new StringBuilder();
+        args.append(OPTIPNG_COMPRESSION_LEVEL_PARAM).append(" ")
+            .append(String.valueOf(level)).append(" ")
+            .append(image.getPath());
+        return new ProcessBuilder(OPTIPNG_EXE, args.toString()).start();
     }
 
     /**
